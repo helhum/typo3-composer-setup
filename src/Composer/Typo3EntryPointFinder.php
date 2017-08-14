@@ -83,7 +83,7 @@ class Typo3EntryPointFinder
         }
 
         if (file_exists($backendSourceFile = $backendPackagePath . '/Resources/Private/Php/backend.php')) {
-            $entryPoints['backend']['source'] = $frontendSourceFile;
+            $entryPoints['backend']['source'] = $backendSourceFile;
         } elseif (isset($cmsInstallPath)) {
             $entryPoints['backend']['source'] = $cmsInstallPath . '/typo3/index.php';
         } else {
