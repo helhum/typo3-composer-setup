@@ -1,6 +1,6 @@
 <?php
 declare(strict_types=1);
-namespace Helhum\Typo3NoSymlinkInstall\Composer\InstallerScripts;
+namespace Helhum\Typo3ComposerSetup\Composer\InstallerScripts;
 
 /*
  * This file is part of the TYPO3 project.
@@ -20,15 +20,18 @@ use Composer\IO\IOInterface;
 use Composer\Package\PackageInterface;
 use Composer\Script\Event;
 use Composer\Semver\Constraint\EmptyConstraint;
-use TYPO3\CMS\Composer\Plugin\Config;
+use Composer\Util\Platform;
 use TYPO3\CMS\Composer\Plugin\Core\InstallerScript;
 use TYPO3\CMS\Composer\Plugin\Util\Filesystem;
 
 /**
- * Setting up TYPO3 web directory
+ * Setting up TYPO3 root directory
  */
-class WebDirectory implements InstallerScript
+class RootDirectory implements InstallerScript
 {
+    /* private */ const PUBLISH_STRATEGY_MIRROR = 'mirror';
+    /* private */ const PUBLISH_STRATEGY_LINK = 'link';
+
     /**
      * @var string
      */
@@ -55,14 +58,25 @@ class WebDirectory implements InstallerScript
     private $filesystem;
 
     /**
-     * @var Config
-     */
-    private $pluginConfig;
-
-    /**
      * @var bool
      */
     private $isDevMode = false;
+
+    /**
+     * @var string
+     */
+    private $rootDir;
+
+    /**
+     * @var string
+     */
+    private $publishStrategy;
+
+    public function __construct(string $rootDir, string $publishStrategy = self::PUBLISH_STRATEGY_LINK)
+    {
+        $this->rootDir = $rootDir;
+        $this->publishStrategy = $publishStrategy;
+    }
 
     /**
      * Prepare the web directory with symlinks
@@ -75,12 +89,9 @@ class WebDirectory implements InstallerScript
         $this->io = $event->getIO();
         $this->composer = $event->getComposer();
         $this->filesystem = new Filesystem();
-        $this->pluginConfig = Config::load($this->composer);
         $this->isDevMode = $event->isDevMode();
 
-        $webDir = $this->filesystem->normalizePath($this->pluginConfig->get('web-dir'));
-        $backendDir = $webDir . self::$typo3Dir;
-        $this->filesystem->ensureDirectoryExists($backendDir);
+        $backendDir = $this->rootDir . self::$typo3Dir;
 
         $localRepository = $this->composer->getRepositoryManager()->getLocalRepository();
         $typo3Package = $localRepository->findPackage('typo3/cms', new EmptyConstraint());
@@ -92,8 +103,29 @@ class WebDirectory implements InstallerScript
         if (is_dir($target)) {
             $this->filesystem->removeDirectory($target);
         }
+
+        $fileSystem = new \Symfony\Component\Filesystem\Filesystem();
         foreach ($this->getCoreExtensionKeysFromTypo3Package($typo3Package) as $coreExtKey) {
-            $this->filesystem->copy($source . '/' . $coreExtKey, $target . '/' . $coreExtKey);
+            $extensionSource = $source . '/' . $coreExtKey;
+            $extensionTarget = $target . '/' . $coreExtKey;
+            if ($this->publishStrategy === self::PUBLISH_STRATEGY_LINK) {
+                if (Platform::isWindows()) {
+                    // Implement symlinks as NTFS junctions on Windows
+                    $this->filesystem->junction($extensionSource, $extensionTarget);
+                } else {
+                    $absolutePath = $extensionTarget;
+                    if (!$this->filesystem->isAbsolutePath($absolutePath)) {
+                        $absolutePath = getcwd() . DIRECTORY_SEPARATOR . $extensionTarget;
+                    }
+                    $shortestPath = $this->filesystem->findShortestPath($absolutePath, $extensionSource);
+                    $extensionTarget = rtrim($extensionTarget, '/');
+                    $fileSystem->symlink($shortestPath, $extensionTarget);
+                }
+            } elseif ($this->publishStrategy === self::PUBLISH_STRATEGY_MIRROR) {
+                $fileSystem->mirror($extensionSource, $extensionTarget, null, ['delete' => true]);
+            } else {
+                throw new \UnexpectedValueException('Publish strategy can only be one of "mirror" or "link"');
+            }
         }
 
         return true;
@@ -109,7 +141,7 @@ class WebDirectory implements InstallerScript
         $coreExtensionKeys = [];
         $frameworkPackages = [];
         foreach ($typo3Package->getReplaces() as $name => $_) {
-            if (strpos($name, 'typo3/cms-') === 0) {
+            if (is_string($name) && strpos($name, 'typo3/cms-') === 0) {
                 $frameworkPackages[] = $name;
             }
         }
@@ -121,7 +153,7 @@ class WebDirectory implements InstallerScript
             if ($package === $rootPackage && $this->isDevMode) {
                 $requires = array_merge($requires, $package->getDevRequires());
             }
-            foreach ($requires as $name => $link) {
+            foreach ($requires as $name => $_) {
                 if (in_array($name, $frameworkPackages, true)) {
                     $extensionKey = $this->determineExtKeyFromPackageName($name);
                     $this->io->writeError(sprintf('The package "%s" requires: "%s"', $package->getName(), $name), true, IOInterface::DEBUG);

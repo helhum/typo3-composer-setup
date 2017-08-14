@@ -1,6 +1,6 @@
 <?php
 declare(strict_types=1);
-namespace Helhum\Typo3NoSymlinkInstall\Composer\InstallerScripts;
+namespace Helhum\Typo3ComposerSetup\Composer\InstallerScripts;
 
 /*
  * This file is part of the TYPO3 project.
@@ -17,7 +17,6 @@ namespace Helhum\Typo3NoSymlinkInstall\Composer\InstallerScripts;
 
 use Composer\Script\Event;
 use Composer\Util\Filesystem;
-use TYPO3\CMS\Composer\Plugin\Config;
 use TYPO3\CMS\Composer\Plugin\Core\InstallerScript;
 
 class EntryPoint implements InstallerScript
@@ -46,20 +45,18 @@ class EntryPoint implements InstallerScript
     {
         $composer = $event->getComposer();
         $filesystem = new Filesystem();
-        $pluginConfig = Config::load($composer);
 
         $entryPointContent = file_get_contents($this->source);
-        $targetFile = $pluginConfig->get('web-dir') . '/' . $this->target;
         $autoloadFile = $composer->getConfig()->get('vendor-dir') . '/autoload.php';
 
         $entryPointContent = preg_replace(
             '/(\$classLoader = require )[^;]*;$/m',
-            '\1' . $filesystem->findShortestPathCode($targetFile, $autoloadFile) . ';',
+            '\1' . $filesystem->findShortestPathCode($this->target, $autoloadFile) . ';',
             $entryPointContent
         );
 
-        $filesystem->ensureDirectoryExists(dirname($targetFile));
-        file_put_contents($targetFile, $entryPointContent);
+        $filesystem->ensureDirectoryExists(dirname($this->target));
+        file_put_contents($this->target, $entryPointContent);
 
         return true;
     }
