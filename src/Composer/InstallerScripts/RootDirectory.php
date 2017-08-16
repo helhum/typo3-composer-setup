@@ -110,6 +110,7 @@ class RootDirectory implements InstallerScript
             $extensionTarget = $target . '/' . $coreExtKey;
             if ($this->publishStrategy === self::PUBLISH_STRATEGY_LINK) {
                 if (Platform::isWindows()) {
+                    $this->filesystem->ensureDirectoryExists(dirname($extensionTarget));
                     // Implement symlinks as NTFS junctions on Windows
                     $this->filesystem->junction($extensionSource, $extensionTarget);
                 } else {
@@ -154,7 +155,7 @@ class RootDirectory implements InstallerScript
                 $requires = array_merge($requires, $package->getDevRequires());
             }
             foreach ($requires as $name => $_) {
-                if (in_array($name, $frameworkPackages, true)) {
+                if (is_string($name) && in_array($name, $frameworkPackages, true)) {
                     $extensionKey = $this->determineExtKeyFromPackageName($name);
                     $this->io->writeError(sprintf('The package "%s" requires: "%s"', $package->getName(), $name), true, IOInterface::DEBUG);
                     $this->io->writeError(sprintf('The extension key for package "%s" is: "%s"', $name, $extensionKey), true, IOInterface::DEBUG);
