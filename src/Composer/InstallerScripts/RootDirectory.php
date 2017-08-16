@@ -100,25 +100,31 @@ class RootDirectory implements InstallerScript
         $source = $sourcesDir . self::$typo3Dir . self::$systemExtensionsDir;
         $target = $backendDir . self::$systemExtensionsDir;
 
-        if (is_dir($target)) {
-            $this->filesystem->removeDirectory($target);
+        $coreExtKeys = $this->getCoreExtensionKeysFromTypo3Package($typo3Package);
+        $fileSystem = new \Symfony\Component\Filesystem\Filesystem();
+        $installedSystemExtensions = glob($target . '/*');
+        foreach ($installedSystemExtensions as $installedSystemExtension) {
+            if (!in_array(basename($installedSystemExtension), $coreExtKeys, true)) {
+                if ($this->filesystem->isJunction($installedSystemExtension)) {
+                    $this->filesystem->removeJunction($installedSystemExtension);
+                } else {
+                    $fileSystem->remove($installedSystemExtension);
+                }
+            }
         }
 
-        $fileSystem = new \Symfony\Component\Filesystem\Filesystem();
-        foreach ($this->getCoreExtensionKeysFromTypo3Package($typo3Package) as $coreExtKey) {
+        foreach ($coreExtKeys as $coreExtKey) {
             $extensionSource = $source . '/' . $coreExtKey;
             $extensionTarget = $target . '/' . $coreExtKey;
             if ($this->publishStrategy === self::PUBLISH_STRATEGY_LINK) {
+                if (file_exists($extensionTarget)) {
+                    continue;
+                }
                 if (Platform::isWindows()) {
-                    $this->filesystem->ensureDirectoryExists(dirname($extensionTarget));
                     // Implement symlinks as NTFS junctions on Windows
                     $this->filesystem->junction($extensionSource, $extensionTarget);
                 } else {
-                    $absolutePath = $extensionTarget;
-                    if (!$this->filesystem->isAbsolutePath($absolutePath)) {
-                        $absolutePath = getcwd() . DIRECTORY_SEPARATOR . $extensionTarget;
-                    }
-                    $shortestPath = $this->filesystem->findShortestPath($absolutePath, $extensionSource);
+                    $shortestPath = $this->filesystem->findShortestPath($extensionTarget, $extensionSource);
                     $extensionTarget = rtrim($extensionTarget, '/');
                     $fileSystem->symlink($shortestPath, $extensionTarget);
                 }
