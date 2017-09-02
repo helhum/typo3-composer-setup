@@ -47,7 +47,7 @@ class InstallerScripts implements InstallerScriptsRegistration
                     $entryPoint['source'],
                     $entryPoint['target']
                 ),
-                70
+                80
             );
 
         }
