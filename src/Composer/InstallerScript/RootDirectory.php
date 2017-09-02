@@ -90,8 +90,9 @@ class RootDirectory implements InstallerScript
         $this->composer = $event->getComposer();
         $this->filesystem = new Filesystem();
         $this->isDevMode = $event->isDevMode();
-
         $backendDir = $this->rootDir . self::$typo3Dir;
+
+        $this->io->writeError('<info>Setting up TYPO3 Core Extension directories</info>');
 
         $localRepository = $this->composer->getRepositoryManager()->getLocalRepository();
         $typo3Package = $localRepository->findPackage('typo3/cms', new EmptyConstraint());

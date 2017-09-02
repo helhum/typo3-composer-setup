@@ -16,7 +16,10 @@ namespace Helhum\Typo3ComposerSetup\Composer;
  */
 
 use Composer\Script\Event;
+use Composer\Semver\Constraint\EmptyConstraint;
+use Helhum\Typo3ComposerSetup\Composer\InstallerScript\ConsoleCommand;
 use Helhum\Typo3ComposerSetup\Composer\InstallerScript\EntryPoint;
+use Helhum\Typo3ComposerSetup\Composer\InstallerScript\RootDirectory;
 use TYPO3\CMS\Composer\Plugin\Config;
 use TYPO3\CMS\Composer\Plugin\Core\InstallerScriptsRegistration;
 use TYPO3\CMS\Composer\Plugin\Core\ScriptDispatcher;
@@ -49,7 +52,38 @@ class InstallerScripts implements InstallerScriptsRegistration
                 ),
                 80
             );
+        }
 
+        $rootDir = $pluginConfig->get('root-dir');
+        $typo3CmsPackage = $event->getComposer()->getRepositoryManager()->getLocalRepository()->findPackage('typo3/cms', new EmptyConstraint());
+        if (
+            $typo3CmsPackage
+            && !class_exists(\Helhum\Typo3NoSymlinkInstall\Composer\InstallerScripts::class)
+            && !class_exists(\Helhum\Typo3SecureWeb\Composer\InstallerScripts::class)
+        ) {
+            $scriptDispatcher->addInstallerScript(
+                new RootDirectory($rootDir, RootDirectory::PUBLISH_STRATEGY_LINK),
+                90
+            );
+        }
+
+        $scriptDispatcher->addInstallerScript(
+            new ConsoleCommand('install:generatepackagestates'),
+            65
+        );
+        $scriptDispatcher->addInstallerScript(
+            new ConsoleCommand('install:fixfolderstructure'),
+            65
+        );
+        if ($event->isDevMode()) {
+            $scriptDispatcher->addInstallerScript(
+                new ConsoleCommand(
+                    'install:extensionsetupifpossible',
+                    [],
+                    'Setting up TYPO3 environment and extensions.'
+                ),
+                61
+            );
         }
     }
 }

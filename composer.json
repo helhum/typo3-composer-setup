@@ -28,6 +28,7 @@
         "typo3/cms-sv": "^7.6 || ^8.7"
     },
     "suggest": {
+        "helhum/typo3-console": "TYPO3 Console is highly recommended for any TYPO3 composer setup.",
         "typo3/cms-t3skin": "When using typo3/cms 7.6, you need to require typo3/cms-t3skin as well."
     },
     "require-dev": {
