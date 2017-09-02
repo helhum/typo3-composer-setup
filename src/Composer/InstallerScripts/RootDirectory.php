@@ -29,8 +29,8 @@ use TYPO3\CMS\Composer\Plugin\Util\Filesystem;
  */
 class RootDirectory implements InstallerScript
 {
-    /* private */ const PUBLISH_STRATEGY_MIRROR = 'mirror';
-    /* private */ const PUBLISH_STRATEGY_LINK = 'link';
+    const PUBLISH_STRATEGY_MIRROR = 'mirror';
+    const PUBLISH_STRATEGY_LINK = 'link';
 
     /**
      * @var string
