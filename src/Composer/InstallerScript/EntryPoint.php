@@ -1,6 +1,6 @@
 <?php
 declare(strict_types=1);
-namespace Helhum\Typo3ComposerSetup\Composer\InstallerScripts;
+namespace Helhum\Typo3ComposerSetup\Composer\InstallerScript;
 
 /*
  * This file is part of the TYPO3 project.

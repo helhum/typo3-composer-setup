@@ -16,7 +16,7 @@ namespace Helhum\Typo3ComposerSetup\Composer;
  */
 
 use Composer\Script\Event;
-use Helhum\Typo3ComposerSetup\Composer\InstallerScripts\EntryPoint;
+use Helhum\Typo3ComposerSetup\Composer\InstallerScript\EntryPoint;
 use TYPO3\CMS\Composer\Plugin\Config;
 use TYPO3\CMS\Composer\Plugin\Core\InstallerScriptsRegistration;
 use TYPO3\CMS\Composer\Plugin\Core\ScriptDispatcher;
