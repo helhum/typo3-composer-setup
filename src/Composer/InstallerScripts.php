@@ -66,24 +66,5 @@ class InstallerScripts implements InstallerScriptsRegistration
                 90
             );
         }
-
-        $scriptDispatcher->addInstallerScript(
-            new ConsoleCommand('install:generatepackagestates'),
-            65
-        );
-        $scriptDispatcher->addInstallerScript(
-            new ConsoleCommand('install:fixfolderstructure'),
-            65
-        );
-        if ($event->isDevMode()) {
-            $scriptDispatcher->addInstallerScript(
-                new ConsoleCommand(
-                    'install:extensionsetupifpossible',
-                    [],
-                    'Setting up TYPO3 environment and extensions.'
-                ),
-                61
-            );
-        }
     }
 }

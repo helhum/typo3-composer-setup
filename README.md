@@ -3,13 +3,13 @@
 This is a composer package that uses typo3/cms-composer-installers
 to generate entry points for the web directory instead of symlinking them.
 
+This means no symlinks to files are required any more, not even the symlinked
+autoload file inside the typo3/cms package
+
 In case `typo3/cms` is required instead of the individual TYPO3 core packages,
 this package will also set up symlinks to all required core extensions.
-
-If package `helhum/typo3-console` is installed in your project as well
-(which is optional), several TYPO3 Console commands are executed
-to every command run, so that PackageStates.php, TYPO3 folder structure
-and (if in dev mode) TYPO3 extensions are properly set up.
+No other core extensions are exposed and detected by TYPO3 except the ones
+that are required by composer installed packages (including the root package).
 
 This package requires `typo3/cms-composer-installers` `^1.4`, which requires PHP > 7.0
 
