@@ -101,6 +101,8 @@ class RootDirectory implements InstallerScript
         $source = $sourcesDir . self::$typo3Dir . self::$systemExtensionsDir;
         $target = $backendDir . self::$systemExtensionsDir;
 
+        $this->ensureOldLinksRemoved($target);
+
         $coreExtKeys = $this->getCoreExtensionKeysFromTypo3Package($typo3Package);
         $fileSystem = new \Symfony\Component\Filesystem\Filesystem();
         $installedSystemExtensions = glob($target . '/*');
@@ -139,6 +141,16 @@ class RootDirectory implements InstallerScript
         return true;
     }
 
+    private function ensureOldLinksRemoved(string $systemDir)
+    {
+        $typo3Dir = dirname($systemDir);
+        $indexPhp = dirname($typo3Dir) . '/index.php';
+        foreach ([$systemDir, $typo3Dir, $indexPhp] as $possibleLink) {
+            if (is_link($possibleLink)) {
+                unlink($possibleLink);
+            }
+        }
+    }
 
     /**
      * @param PackageInterface $typo3Package
