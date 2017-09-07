@@ -102,6 +102,7 @@ class RootDirectory implements InstallerScript
         $target = $backendDir . self::$systemExtensionsDir;
 
         $this->ensureOldLinksRemoved($target);
+        $this->filesystem->ensureDirectoryExists($target);
 
         $coreExtKeys = $this->getCoreExtensionKeysFromTypo3Package($typo3Package);
         $fileSystem = new \Symfony\Component\Filesystem\Filesystem();
