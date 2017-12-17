@@ -15,7 +15,6 @@
         "typo3/cms-composer-installers": "^1.4 || ^2.0",
         "typo3/cms-backend": "^7.6 || ^8.7 || ~9.0.0",
         "typo3/cms-core": "^7.6 || ^8.7 || ~9.0.0",
-        "typo3/cms-cshmanual": "^7.6 || ^8.7 || ~9.0.0",
         "typo3/cms-extbase": "^7.6 || ^8.7 || ~9.0.0",
         "typo3/cms-extensionmanager": "^7.6 || ^8.7 || ~9.0.0",
         "typo3/cms-filelist": "^7.6 || ^8.7 || ~9.0.0",
@@ -24,11 +23,12 @@
         "typo3/cms-install": "^7.6 || ^8.7 || ~9.0.0",
         "typo3/cms-lang": "^7.6 || ^8.7 || ~9.0.0",
         "typo3/cms-recordlist": "^7.6 || ^8.7 || ~9.0.0",
-        "typo3/cms-saltedpasswords": "^7.6 || ^8.7 || ~9.0.0",
-        "typo3/cms-sv": "^7.6 || ^8.7 || ~9.0.0"
+        "typo3/cms-saltedpasswords": "^7.6 || ^8.7 || ~9.0.0"
     },
     "suggest": {
         "helhum/typo3-console": "TYPO3 Console is highly recommended for any TYPO3 composer setup.",
+        "typo3/cms-cshmanual": "When using typo3/cms 8.7, you need to require typo3/cms-cshmanual as well.",
+        "typo3/cms-sv": "When using typo3/cms 8.7, you need to require typo3/cms-sv as well.",
         "typo3/cms-t3skin": "When using typo3/cms 7.6, you need to require typo3/cms-t3skin as well."
     },
     "require-dev": {
