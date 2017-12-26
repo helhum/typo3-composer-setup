@@ -17,13 +17,11 @@ namespace Helhum\Typo3ComposerSetup\Composer;
 
 use Composer\Script\Event;
 use Composer\Semver\Constraint\EmptyConstraint;
-use Helhum\Typo3ComposerSetup\Composer\InstallerScript\ConsoleCommand;
 use Helhum\Typo3ComposerSetup\Composer\InstallerScript\EntryPoint;
 use Helhum\Typo3ComposerSetup\Composer\InstallerScript\RootDirectory;
 use TYPO3\CMS\Composer\Plugin\Config;
 use TYPO3\CMS\Composer\Plugin\Core\InstallerScriptsRegistration;
 use TYPO3\CMS\Composer\Plugin\Core\ScriptDispatcher;
-use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 
 /**
  * Hook into Composer build to set up TYPO3 web directory entry point scripts
@@ -36,10 +34,6 @@ class InstallerScripts implements InstallerScriptsRegistration
      */
     public static function register(Event $event, ScriptDispatcher $scriptDispatcher)
     {
-        if (class_exists(ExtensionConfiguration::class)) {
-            // TYPO3 9.x takes care of writing the entry scripts, so we don't need to do sth. here
-            return;
-        }
         $composer = $event->getComposer();
         $pluginConfig = Config::load($composer);
         $webDir = $pluginConfig->get('web-dir');
