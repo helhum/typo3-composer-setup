@@ -12,6 +12,7 @@
         }
     ],
     "require": {
+        "typo3/cms-composer-installers": "^1.4 || ^2.0",
         "typo3/minimal": "^7 || ^8 || ^9"
     },
     "suggest": {
