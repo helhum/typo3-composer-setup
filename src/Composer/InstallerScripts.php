@@ -18,6 +18,7 @@ namespace Helhum\Typo3ComposerSetup\Composer;
 use Composer\Script\Event;
 use Composer\Semver\Constraint\EmptyConstraint;
 use Helhum\Typo3ComposerSetup\Composer\InstallerScript\EntryPoint;
+use Helhum\Typo3ComposerSetup\Composer\InstallerScript\LegacyCliEntryPoint;
 use Helhum\Typo3ComposerSetup\Composer\InstallerScript\RootDirectory;
 use TYPO3\CMS\Composer\Plugin\Config;
 use TYPO3\CMS\Composer\Plugin\Core\InstallerScriptsRegistration;
@@ -44,13 +45,18 @@ class InstallerScripts implements InstallerScriptsRegistration
         );
 
         foreach ($entryPointFinder->find($webDir) as $entryPoint) {
-            $scriptDispatcher->addInstallerScript(
-                new EntryPoint(
+            if ($entryPoint['legacy_cli'] ?? false) {
+                $entryPoint = new LegacyCliEntryPoint(
+                    $entryPoint['target']
+                );
+            } else {
+                $entryPoint = new EntryPoint(
                     $entryPoint['source'],
                     $entryPoint['target']
-                ),
-                80
-            );
+                );
+            }
+
+            $scriptDispatcher->addInstallerScript($entryPoint, 80);
         }
 
         $rootDir = $pluginConfig->get('root-dir');

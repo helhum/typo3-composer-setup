@@ -90,6 +90,18 @@ class Typo3EntryPointFinder
             throw new \UnexpectedValueException('Could not determine backend entry point. typo3/cms is not installed?', 1502706254);
         }
 
+        if (file_exists($backendCliSourceFile = $backendPackagePath . '/Resources/Private/Php/cli.php') ||
+            file_exists($backendCliSourceFile = $cmsInstallPath . '/typo3/sysext/backend/Resources/Private/Php/cli.php')) {
+            $entryPoints['backend_cli'] = [
+                'source' => $backendCliSourceFile,
+                'target' => $targetPath . '/typo3/cli.php',
+            ];
+            $entryPoints['backend_cli_dispatch'] = [
+                'target' => $targetPath . '/typo3/cli_dispatch.phpsh',
+                'legacy_cli' => true,
+            ];
+        }
+
         if (file_exists($installSourceFile = $installPackagePath . '/Resources/Private/Php/install.php')) {
             $entryPoints['install']['source'] = $installSourceFile;
         } elseif (isset($cmsInstallPath)) {
