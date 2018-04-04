@@ -16,7 +16,8 @@
         "typo3/minimal": "^7 || ^8 || ^9"
     },
     "suggest": {
-        "helhum/typo3-console": "TYPO3 Console is highly recommended for any TYPO3 composer setup."
+        "helhum/typo3-console": "TYPO3 Console is highly recommended for any TYPO3 composer setup.",
+        "pagemachine/typo3-composer-legacy-cli ": "Provides the legacy cli_dispatch.phpsh entry point for TYPO3."
     },
     "require-dev": {
         "typo3/cms-core": "dev-TYPO3_8-7 as 8.7.9",
