@@ -2,7 +2,7 @@
     "name": "helhum/typo3-composer-setup",
     "description": "Set up required entry points for TYPO3 web directory",
     "type": "library",
-    "license": "GPL-2.0+",
+    "license": "GPL-2.0-or-later",
     "authors": [
         {
             "name": "Helmut Hummel",
