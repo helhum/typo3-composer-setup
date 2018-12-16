@@ -35,10 +35,16 @@ class EntryPoint implements InstallerScript
      */
     private $target;
 
-    public function __construct(string $source, string $target)
+    /**
+     * @var string
+     */
+    private $additionalCode;
+
+    public function __construct(string $source, string $target, string $additionalCode = '')
     {
         $this->source = $source;
         $this->target = $target;
+        $this->additionalCode = $additionalCode;
     }
 
     public function run(Event $event): bool
@@ -51,7 +57,9 @@ class EntryPoint implements InstallerScript
 
         $entryPointContent = preg_replace(
             '/(\$classLoader = require )[^;]*;$/m',
-            '\1' . $filesystem->findShortestPathCode($this->target, $autoloadFile) . ';',
+            '\1' . $filesystem->findShortestPathCode($this->target, $autoloadFile) . ';'
+            . chr(10)
+            . $this->additionalCode,
             $entryPointContent
         );
 
