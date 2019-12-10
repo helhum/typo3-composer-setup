@@ -13,7 +13,7 @@
     ],
     "require": {
         "typo3/cms-composer-installers": "^1.4 || ^2.0",
-        "typo3/cms-core": "^7 || ^8 || ^9 || ^10"
+        "typo3/minimal": "^7 || ^8 || ^9 || ^10"
     },
     "suggest": {
         "helhum/typo3-console": "TYPO3 Console is highly recommended for any TYPO3 composer setup.",
