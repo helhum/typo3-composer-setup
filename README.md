@@ -13,7 +13,7 @@ that are required by composer installed packages (including the root package).
 
 This package requires `typo3/cms-composer-installers` `^1.4`, which requires PHP > 7.0
 
-In case you need the legacy `cli_dispatch.phps` entry point in TYPO3v7/v8 you can
+In case you need the legacy `cli_dispatch.phpsh` entry point in TYPO3v7/v8 you can
 install the [pagemachine/typo3-composer-legacy-cli](https://packagist.org/packages/pagemachine/typo3-composer-legacy-cli) package.
 
 ## Installation
