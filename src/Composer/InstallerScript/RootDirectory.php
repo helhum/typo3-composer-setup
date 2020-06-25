@@ -19,7 +19,6 @@ use Composer\Composer;
 use Composer\IO\IOInterface;
 use Composer\Package\PackageInterface;
 use Composer\Script\Event;
-use Composer\Semver\Constraint\EmptyConstraint;
 use Composer\Util\Platform;
 use TYPO3\CMS\Composer\Plugin\Core\InstallerScript;
 use TYPO3\CMS\Composer\Plugin\Util\Filesystem;
@@ -95,7 +94,7 @@ class RootDirectory implements InstallerScript
         $this->io->writeError('<info>Setting up TYPO3 Core Extension directories</info>');
 
         $localRepository = $this->composer->getRepositoryManager()->getLocalRepository();
-        $typo3Package = $localRepository->findPackage('typo3/cms', new EmptyConstraint());
+        $typo3Package = $localRepository->findPackage('typo3/cms', '*');
         $sourcesDir = $this->composer->getInstallationManager()->getInstallPath($typo3Package);
 
         $source = $sourcesDir . self::$typo3Dir . self::$systemExtensionsDir;

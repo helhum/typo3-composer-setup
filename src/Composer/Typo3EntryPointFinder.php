@@ -24,7 +24,6 @@ namespace Helhum\Typo3ComposerSetup\Composer;
 
 use Composer\Installer\InstallationManager;
 use Composer\Repository\WritableRepositoryInterface;
-use Composer\Semver\Constraint\EmptyConstraint;
 
 class Typo3EntryPointFinder
 {
@@ -59,18 +58,18 @@ class Typo3EntryPointFinder
     public function find(string $targetPath): array
     {
         $entryPoints = self::$defaultEntryPoints;
-        $typo3CmsPackage = $this->repository->findPackage('typo3/cms', new EmptyConstraint());
+        $typo3CmsPackage = $this->repository->findPackage('typo3/cms', '*');
         if ($typo3CmsPackage) {
             $cmsInstallPath = $this->installationManager->getInstallPath($typo3CmsPackage);
             $frontendPackagePath = $cmsInstallPath . '/typo3/sysext/frontend';
             $backendPackagePath = $cmsInstallPath . '/typo3/sysext/backend';
             $installPackagePath = $cmsInstallPath . '/typo3/sysext/install';
         } else {
-            $frontendPackage = $this->repository->findPackage('typo3/cms-frontend', new EmptyConstraint());
+            $frontendPackage = $this->repository->findPackage('typo3/cms-frontend', '*');
             $frontendPackagePath = $this->installationManager->getInstallPath($frontendPackage);
-            $backendPackage = $this->repository->findPackage('typo3/cms-backend', new EmptyConstraint());
+            $backendPackage = $this->repository->findPackage('typo3/cms-backend', '*');
             $backendPackagePath = $this->installationManager->getInstallPath($backendPackage);
-            $installPackage = $this->repository->findPackage('typo3/cms-install', new EmptyConstraint());
+            $installPackage = $this->repository->findPackage('typo3/cms-install', '*');
             $installPackagePath = $this->installationManager->getInstallPath($installPackage);
         }
 

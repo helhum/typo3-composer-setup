@@ -16,7 +16,6 @@ namespace Helhum\Typo3ComposerSetup\Composer;
  */
 
 use Composer\Script\Event;
-use Composer\Semver\Constraint\EmptyConstraint;
 use Helhum\Typo3ComposerSetup\Composer\InstallerScript\EntryPoint;
 use Helhum\Typo3ComposerSetup\Composer\InstallerScript\RootDirectory;
 use TYPO3\CMS\Composer\Plugin\Config;
@@ -54,7 +53,7 @@ class InstallerScripts implements InstallerScriptsRegistration
         }
 
         $rootDir = $pluginConfig->get('root-dir');
-        $typo3CmsPackage = $event->getComposer()->getRepositoryManager()->getLocalRepository()->findPackage('typo3/cms', new EmptyConstraint());
+        $typo3CmsPackage = $event->getComposer()->getRepositoryManager()->getLocalRepository()->findPackage('typo3/cms', '*');
         if (
             $typo3CmsPackage
             && !class_exists(\Helhum\Typo3NoSymlinkInstall\Composer\InstallerScripts::class)
