@@ -13,14 +13,14 @@
     ],
     "require": {
         "typo3/cms-composer-installers": "^1.4 || ^2.0 || ^3.0",
-        "typo3/minimal": "^7 || ^8 || ^9 || ^10 || ^11"
+        "typo3/minimal": "^7 || ^8 || ^9 || ^10"
     },
     "suggest": {
         "helhum/typo3-console": "TYPO3 Console is highly recommended for any TYPO3 composer setup.",
         "pagemachine/typo3-composer-legacy-cli": "Provides the legacy cli_dispatch.phpsh entry point for TYPO3."
     },
     "require-dev": {
-        "typo3/cms-core": "^8.7.10 || ^9.5.2 || ^10.2.0 || ^11.0.0",
+        "typo3/cms-core": "^8.7.10 || ^9.5.2 || ^10.2.0",
         "typo3-console/php-server-command": "^0.1.0"
     },
     "autoload": {
